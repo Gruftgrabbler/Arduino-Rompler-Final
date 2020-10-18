@@ -1,0 +1,3 @@
+add_executable(DUMMY_TARGET_ROMPLER src/rompler.cpp)
+
+add_executable(DUMMY_TARGET_SINE_TEST src/sineTest.cpp)

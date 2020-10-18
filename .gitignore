@@ -1,0 +1,6 @@
+.pio
+cmake-build-*/
+*.xml
+*.iml
+
+/.idea/$CACHE_FILE$

@@ -2,5 +2,6 @@
 cmake-build-*/
 *.xml
 *.iml
+venv
 
 /.idea/$CACHE_FILE$

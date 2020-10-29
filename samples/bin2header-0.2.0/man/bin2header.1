@@ -1,0 +1,32 @@
+.\"Created with GNOME Manpages Editor
+.\"http://sourceforge.net/projects/gmanedit2
+
+.TH bin2header 1 "Sep 11, 2019" "bin2header-0.2.0"
+
+.SH NAME
+Binary to Header
+
+.SH SYNOPSIS
+.B bin2header
+.RI [options]
+.RI <file>
+.br
+
+.SH OPTIONS
+.TP
+.BR \-h ", " \-\-help
+Print help information & exit.
+.TP
+.BR \-v ", " \-\-version
+Print version information & exit.
+.TP
+.BR \-s ", " \-\-chunksize
+Set the buffer chunk size (in bytes).
+.br
+Default: 1048576 (1 megabyte)
+.TP
+.BR \-\-stdvector
+Additionally store data in std::vector for C++.
+
+.SH DESCRIPTION
+bin2header takes any file as an argument and converts its binary data into a source header file for use in C/C++ applications. The data is stored as a character array.

@@ -1,21 +1,29 @@
 #include "rompler.hpp"
 #include "settings.hpp"
-#include "sample.hpp"
+#include "sample.h"
 #include "timer.hpp"
 #include "fastIO.hpp"
 #include "myShiftOutMSBFirst.hpp"
 
 #define BUTTON_PIN 2            // Pin 2 on Arduino Uno
+#define PITCH_ENCODER 0         // Pin A0 on Arduino Uno
 
 volatile uint16_t i;
 volatile bool startDAC;
 volatile bool stopDAC;
+int8_t enc;
+uint8_t ocr1a;
 
 void readButton(){
+    // TODO Refactor so that the sample will not trigger multiple times after pressing the button
     if(stopDAC && !startDAC){
         startDAC = digitalRead(BUTTON_PIN);
-        if(startDAC)
+        if(startDAC) {
+            enc = analogRead(PITCH_ENCODER) >> 3;
+            enc -= 64;
+            OCR1A = ocr1a + enc;
             stopDAC = false;
+        }
     }
 }
 
@@ -30,7 +38,7 @@ void setup() {
     startDAC = false;
     stopDAC = true;
 
-    uint8_t ocr1a = 51;
+    ocr1a = 180;
     init_timer(ocr1a);
 }
 
@@ -39,10 +47,9 @@ void loop() {
 }
 
 uint8_t getData(){
-    // Return the current sample if the the conversion is ongoing and zero if conversion has stopped
+    // Return the current samples if the the conversion is ongoing and zero if conversion has stopped
     if(startDAC) {
-        //return pgm_read_byte_near(sample_data + i); // Use PROGMEM for big samples
-        return sample_data[i];
+        return pgm_read_byte_near(sample_data + i); // Use PROGMEM for big samples
     }
     return 0;
 }
@@ -56,7 +63,7 @@ void shiftDACOut() {
     digitalWriteFast(DAC_WORD_SELECT_PIN, &PORTB, HIGH);
     digitalWriteFast(DAC_WORD_SELECT_PIN, &PORTB, LOW);
 
-    if(startDAC && !stopDAC) i++;   // Only increase counter when dac is actually emitting sample data
+    if(startDAC && !stopDAC) i++;   // Only increase counter when dac is actually emitting samples data
 
     if(i >= SAMPLE_LEN) {
         startDAC = false;

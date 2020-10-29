@@ -3,7 +3,7 @@
 #include "fastIO.hpp"
 #include "timer.hpp"
 #include "myShiftOutMSBFirst.hpp"
-#include "sample.hpp"
+#include "sineData.h"
 
 volatile uint16_t i;
 
@@ -13,7 +13,12 @@ void setup() {
     digitalWriteFast(DAC_WORD_SELECT_PIN, &DDRB, HIGH); // pinMode(13, OUTPUT)
     i = 0;
 
+    #if WAVETABLE == 2
+    uint8_t ocr1a = 89;
+    #else
     uint8_t ocr1a = 51;
+    #endif
+
     init_timer(ocr1a);
 }
 

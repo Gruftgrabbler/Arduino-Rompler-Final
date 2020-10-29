@@ -1,6 +1,0 @@
-how to use wav2sketch: https://forum.pjrc.com/threads/42401-Instructions-or-tutorials-for-using-wav2sketch
-wave2sketch sources: https://github.com/PaulStoffregen/Audio/blob/master/extras/wav2sketch/wav2sketch.c
-
-wav2sketch converts all wave files in the same folder to a pair of .cpp and .h files
-Since we use 44100kHz stereo samples encoded in 32 bit we need to convert the sample
-to our desired sample-rate in mono to 8 bit unsigned encoding.

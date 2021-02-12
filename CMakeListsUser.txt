@@ -1,3 +1,5 @@
+# This File is created by the projects author to add some dummy build targets
+
 add_executable(DUMMY_TARGET_ROMPLER src/rompler.cpp)
 
 add_executable(DUMMY_TARGET_SINE_TEST src/sineTest.cpp)

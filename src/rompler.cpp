@@ -7,24 +7,32 @@
 
 #define BUTTON_PIN 2            // Pin 2 on Arduino Uno
 #define PITCH_ENCODER 0         // Pin A0 on Arduino Uno
+#define LED_PIN 3               // Pin 3 on Arduino Uno
 
 volatile uint16_t i;
 volatile bool startDAC;
 volatile bool stopDAC;
 int8_t enc;
 uint8_t ocr1a;
+bool buttonLastState;
+bool buttonState;
 
 void readButton(){
-    // TODO Refactor so that the sample will not trigger multiple times after pressing the button
-    if(stopDAC && !startDAC){
-        startDAC = digitalRead(BUTTON_PIN);
-        if(startDAC) {
-            enc = analogRead(PITCH_ENCODER) >> 3;
-            enc -= 64;
-            OCR1A = ocr1a + enc;
-            stopDAC = false;
+    buttonState = !digitalRead(BUTTON_PIN);
+    if(buttonState && !buttonLastState) {
+        if (stopDAC && !startDAC) {
+                if (buttonState) {
+                    enc = analogRead(PITCH_ENCODER) >> 3;
+                    enc -= 64;
+                    OCR1A = ocr1a + enc;
+
+                    startDAC = true;
+                    stopDAC = false;
+                    digitalWrite(LED_PIN, HIGH);
+                }
         }
     }
+    buttonLastState = buttonState;
 }
 
 void setup() {
@@ -33,10 +41,14 @@ void setup() {
     digitalWriteFast(DAC_WORD_SELECT_PIN, &DDRB, HIGH); // pinMode(13, OUTPUT)
 
     pinMode(BUTTON_PIN, INPUT);
+    pinMode(LED_PIN, OUTPUT);
     i = 0;
 
     startDAC = false;
     stopDAC = true;
+
+    buttonLastState = false;
+    buttonState = false;
 
     ocr1a = 180;
     init_timer(ocr1a);
@@ -69,6 +81,7 @@ void shiftDACOut() {
         startDAC = false;
         stopDAC = true;
         i = 0;
+        digitalWrite(LED_PIN, LOW);
     }
 }
 
